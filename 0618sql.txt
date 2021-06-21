@@ -1,0 +1,89 @@
+SELECT last_name, salary, salary+300 as new_salary
+FROM employees;
+
+SELECT last_name 이름, salary "Old Salary", salary+300 as new_salary
+FROM employees;
+
+--사원이름, 급여, 커미션, 실수령액을 검색하시오.
+--실수령액은 급여에 급여와커미션을 콥한 값을 더하여 구한다.
+
+SELECT last_name, salary, commission_pct, salary+commission_pct*salary as "실수령액"
+FROM employees;
+
+SELECT employee_id, first_name, last_name
+FROM employees;
+
+SELECT employee_id || '번 사원 이름은 '||
+    first_name ||' '|| last_name 
+    || ' 입니다.' as full_name
+FROM employees;
+
+SELECT last_name|| q'['s salary :  ]' || salary as slary
+from employees; --최신 q연산자 / 리터럴을 통해 의미전달 목적
+
+SELECT last_name||'''s salary : ' || salary as slary
+from employees; --구식 연산자
+
+SELECT DISTINCT department_id, job_id --distinct : 중복제거 / select 뒤에 한번만 사용가능
+FROM employees;
+
+DESC employees -- describe는 sql플러스 언어(오라클 명령어)이기 때문에 약어로도 사용가능
+                        -- table의 구조를 파악하는데 이용
+                    
+SELECT employee_id, last_name, salary,
+           department_id,hire_date
+FROM employees
+where last_name LIKE '____'; -- '_'는 한문자를 대신하는 역할
+--where department_id IN(80,90); -- in: or역할
+--where hire_date BETWEEN '00/01/01' and '05/12/31'; --작은 수가 앞부분에 나온다.
+--where hire_date > '99-09-21'; --날짜는 숫자와 문자의 중간개념으로 쓰인다. 순서는 year/mon/day를 지켜야하며 오로지 숫자로만 표현.
+--where last_name > 'King'; -- <>:특정부분 제외 / 데이터 검색시 대소문자 식별필요/ 문자 대소의 경우 알파벳 순으로 나열됨
+
+select last_name, job_id, salary
+FROM employees
+where job_id LIKE 'ST\_%' escape '\'; -- escape 뒤에 오는 것은 데이터라는 것을 예외처리시킴(와일드카드가 아님을 알림) 
+
+SELECT employee_id, last_name, commission_pct
+FROM employees
+where commission_pct is null; -- null값을 찾을때는 'is'만 가능('=='는 사용불가)
+
+SELECT employee_id, last_name, salary,
+            department_id
+FROM employees
+WHERE department_id IS NOT NULL;
+--where last_name NOT LIKE '_a%';
+--WHERE  salary NOT BETWEEN 6000 and 9000; -- between 반대상황 출력
+--(department_id = 60 or department_id = 50) and salary > 5000; --and가 선반영되어서 '50'+'5000'이 먼저 실행, ()순으로 선반영
+
+SELECT employee_id, last_name, salary*12 ann_sal,
+            hire_date, department_id
+FROM employees
+where department_id <> 90 --where절은 별칭 사용불가
+order by 5 ; -- // 컬럼의 위치값을 나타냄
+-- order BY department_id , ann_sal DESC; -- 조건 오름차순 정렬/ desc를 추가하면 내림차순(역순)
+-- 컬럼을 2개 이상 입력할 경우 첫번째 컬럼의 조건을 정렬 ==> 2번째 컬럼 정렬
+
+SELECT *
+FROM employees
+--WHERE department_id = &deptno; --치환변수 : '&' + '변수' 
+WHERE job_id = '&job_id'; -- ''를 넣지 않으면 검색할때 '검색어'로 입력해야 하는 불편함 발생
+
+SELECT employee_id, last_name, &&col_name 
+--&col_name 호출, &&를 사용할 경우 &&의 변수가 저장되어 이후 &의 변수에도 이전 변수가 통일되어 사용된다.
+-- 재실행 해도 이전 변수가 저장되어 그대로 사용됨
+FROM employees
+order BY &col_name; -- &col_name 정렬 / 치환변수는 사용제한이 없다.
+define col_name
+undefine col_name -- &&에 저장된 변수값을 제거 --> &를 실행하면 변수 재입력 / 이 때문에 &&와 undefine은 set로 사용된다.
+
+
+
+
+select |
+
+
+
+
+
+
+
